@@ -40,6 +40,20 @@
       }
     }
     </script>
+
+	<!-- Yandex.Metrika counter -->
+	<script type="text/javascript">
+		(function(m,e,t,r,i,k,a){
+			m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+			m[i].l=1*new Date();
+			for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+			k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+		})(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109190276', 'ym');
+
+		ym(109190276, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+	</script>
+	<noscript><div><img src="https://mc.yandex.ru/watch/109190276" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+	<!-- /Yandex.Metrika counter -->
 </head>
 <body class="bg-gray-900 text-white font-sans">
 
@@ -253,7 +267,7 @@
         </div>
     </section>
 
-<!-- Секция живой статистики -->
+<!-- Секция "живой" статистики -->
 <section class="max-w-6xl mx-auto px-6 py-10">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
         <div class="bg-gray-800/50 p-6 rounded-2xl border border-gray-800">
@@ -261,7 +275,7 @@
             <p class="text-gray-500 text-xs uppercase tracking-widest mt-1">Визитов сегодня</p>
         </div>
         <div class="bg-gray-800/50 p-6 rounded-2xl border border-gray-800">
-            <p class="text-3xl font-black text-green-500">89</p>
+            <p id="online-counter" class="text-3xl font-black text-green-500">89</p>
             <p class="text-gray-500 text-xs uppercase tracking-widest mt-1">Сейчас на сайте</p>
         </div>
         <div class="bg-gray-800/50 p-6 rounded-2xl border border-gray-800">
@@ -281,5 +295,40 @@
         <p class="text-gray-700 text-xs mt-2 italic px-4">Спортивные прогнозы несут риск. Мы не несем ответственности за ваши финансовые решения.</p>
     </footer>
 
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			const counterElement = document.getElementById("online-counter");
+			
+			// 1. Генерируем стартовое число от 50 до 90
+			const minLimit = 50;
+			const maxLimit = 90;
+			let currentOnline = Math.floor(Math.random() * (maxLimit - minLimit + 1)) + minLimit;
+			
+			// Выводим стартовое число на экран
+			counterElement.textContent = currentOnline;
+
+			// 2. Функция плавного изменения счетчика
+			function updateCounter() {
+				// Случайно решаем: прибавить, отнять или оставить (от -2 до +2 человек)
+				const change = Math.floor(Math.random() * 5) - 2; 
+				
+				currentOnline += change;
+
+				// Удерживаем число строго в рамках от 50 до 90
+				if (currentOnline < minLimit) currentOnline = minLimit;
+				if (currentOnline > maxLimit) currentOnline = maxLimit;
+
+				// Обновляем текст на странице
+				counterElement.textContent = currentOnline;
+
+				// Задаем случайное время до следующего обновления (от 4000 до 8000 миллисекунд)
+				const nextTime = Math.floor(Math.random() * (8000 - 4000 + 1)) + 4000;
+				setTimeout(updateCounter, nextTime);
+			}
+
+			// Запускаем цикл обновлений через 5 секунд после входа
+			setTimeout(updateCounter, 5000);
+		});
+	</script>
 </body>
 </html>
