@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dmnd-predict.netlify.app/sitemap.xml
