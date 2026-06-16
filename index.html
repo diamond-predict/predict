@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ru" id="html-lang">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Динамические мета-теги будут перезаписаны скриптом -->
+    <title id="meta-title">Ежедневный гороскоп на сегодня – астрологический прогноз для всех знаков зодиака</title>
+    <meta name="description" id="meta-description" content="Узнайте свой ежедневный гороскоп на сегодня. Астрологический прогноз для каждого знака зодиака: любовь, работа, здоровье. Бесплатно.">
+    <meta name="keywords" id="meta-keywords" content="гороскоп, прогноз, астрология, прогноз на день, знаки зодиака, ежедневный гороскоп, гороскоп на сегодня">
+    <!-- Open Graph -->
+    <meta property="og:title" id="og-title" content="Ежедневный гороскоп на сегодня – прогноз для всех знаков">
+    <meta property="og:description" id="og-description" content="Узнайте свой астрологический прогноз на сегодня для вашего знака зодиака.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://free-predict.ru">
+    
+    <!-- Favicon (звезда) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%230b0a1a' stroke='%23f9d976' stroke-width='4'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle' fill='%23f9d976' font-family='sans-serif'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+    
+    <!-- Schema.org для статьи (будет на текущем языке) -->
+    <script type="application/ld+json" id="schema-json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Ежедневный гороскоп на сегодня",
+      "description": "Астрологический прогноз для всех знаков зодиака на текущий день. Узнайте, что ждёт вас в любви, работе и здоровье.",
+      "author": {
+        "@type": "Organization",
+        "name": "Астрологический портал"
+      },
+      "datePublished": "2026-06-16",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Астрологический портал"
+      }
+    }
+    </script>
+    <style>
+        /* Все стили остаются без изменений */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0b0a1a;
+            color: #f0e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 20px 40px;
+        }
+        header {
+            text-align: center;
+            padding: 20px 0 10px;
+            border-bottom: 1px solid rgba(255, 215, 150, 0.2);
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #f9d976, #f39b7b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(243, 155, 123, 0.2);
+            margin-bottom: 6px;
+        }
+        header .subtitle {
+            font-size: 1.1rem;
+            color: #b8adc0;
+            letter-spacing: 1px;
+        }
+        .lang-switch {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .lang-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 215, 150, 0.3);
+            color: #b8adc0;
+            padding: 4px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .lang-btn:hover {
+            border-color: #f9d976;
+            color: #f0e8f0;
+        }
+        .lang-btn.active {
+            background: rgba(249, 217, 118, 0.15);
+            border-color: #f9d976;
+            color: #f9d976;
+        }
+        .signs-section {
+            margin-bottom: 40px;
+        }
+        .signs-section h2 {
+            text-align: center;
+            font-weight: 300;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #d4c8e0;
+        }
+        .signs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 20px;
+            justify-items: center;
+        }
+        .sign-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 215, 150, 0.15);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            padding: 8px 0;
+            position: relative;
+        }
+        .sign-card:hover {
+            transform: translateY(-6px) scale(1.05);
+            border-color: #f9d976;
+            box-shadow: 0 12px 30px rgba(249, 217, 118, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .sign-card.active {
+            border-color: #f9d976;
+            background: rgba(249, 217, 118, 0.15);
+            box-shadow: 0 0 30px rgba(249, 217, 118, 0.2);
+        }
+        .sign-symbol {
+            font-size: 2.4rem;
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+        .sign-name {
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: #d4c8e0;
+            text-transform: uppercase;
+        }
+        .forecast-section {
+            background: rgba(20, 15, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 30px 35px;
+            border: 1px solid rgba(255, 215, 150, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            margin-top: 20px;
+            transition: all 0.4s ease;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+        }
+        .forecast-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(255, 215, 150, 0.1);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+        .forecast-sign {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .forecast-sign .symbol {
+            font-size: 2.8rem;
+        }
+        .forecast-sign .name {
+            font-size: 2rem;
+            font-weight: 300;
+            color: #f0e8f0;
+        }
+        .forecast-date {
+            font-size: 0.95rem;
+            color: #b8adc0;
+            letter-spacing: 1px;
+        }
+        .forecast-text {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: #e8dce8;
+            margin: 12px 0 18px;
+            padding: 10px 0;
+            flex: 1;
+        }
+        .forecast-advice {
+            background: rgba(249, 217, 118, 0.08);
+            border-left: 4px solid #f9d976;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #d4c8e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .forecast-advice::before {
+            content: '✦';
+            color: #f9d976;
+            font-size: 1.4rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #6a5f7a;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.2rem; }
+            .signs-grid { gap: 12px; }
+            .sign-card { width: 65px; height: 85px; }
+            .sign-symbol { font-size: 1.8rem; }
+            .sign-name { font-size: 0.65rem; }
+            .forecast-section { padding: 20px 18px; }
+            .forecast-sign .name { font-size: 1.5rem; }
+            .forecast-text { font-size: 1rem; }
+        }
+        @media (max-width: 480px) {
+            .signs-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+            .sign-card { width: 60px; height: 75px; }
+            .forecast-section { padding: 16px 14px; }
+            .forecast-sign .symbol { font-size: 2rem; }
+            .forecast-sign .name { font-size: 1.2rem; }
+            .forecast-text { font-size: 0.95rem; }
+        }
+        .forecast-section {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .forecast-section.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+        /* небольшие правки для переключателя */
+        .lang-switch .lang-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 215, 150, 0.2);
+            color: #b8adc0;
+            padding: 4px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .lang-switch .lang-btn:hover {
+            border-color: #f9d976;
+            color: #f0e8f0;
+        }
+        .lang-switch .lang-btn.active {
+            background: rgba(249, 217, 118, 0.15);
+            border-color: #f9d976;
+            color: #f9d976;
+        }
+    </style>
+	<!-- Yandex.Metrika counter -->
+	<script type="text/javascript">
+		(function(m,e,t,r,i,k,a){
+			m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+			m[i].l=1*new Date();
+			for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+			k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+		})(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109190276', 'ym');
+
+		ym(109190276, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+	</script>
+	<noscript><div><img src="https://mc.yandex.ru/watch/109190276" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+	<!-- /Yandex.Metrika counter -->
+</head>
+<body>
+
+    <canvas id="starfield"></canvas>
+
+    <div class="container">
+        <header>
+            <h1 id="header-title">✨ Гороскоп дня</h1>
+            <div class="subtitle" id="header-subtitle">Астрологический прогноз на сегодня для каждого знака зодиака</div>
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="ru">RU</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </header>
+
+        <section class="signs-section">
+            <h2 id="signs-title">Выберите свой знак</h2>
+            <div class="signs-grid" id="signsGrid"></div>
+        </section>
+
+        <section class="forecast-section" id="forecastSection">
+            <div class="forecast-header">
+                <div class="forecast-sign">
+                    <span class="symbol" id="forecastSymbol">♈</span>
+                    <span class="name" id="forecastName">Овен</span>
+                </div>
+                <div class="forecast-date" id="forecastDate">16 июня 2026</div>
+            </div>
+            <div class="forecast-text" id="forecastText">
+                Сегодня отличный день для новых начинаний. Ваша энергия поможет справиться с любыми задачами.
+            </div>
+            <div class="forecast-advice" id="forecastAdvice">
+                Совет дня: Пейте больше воды и не забывайте отдыхать.
+            </div>
+        </section>
+
+        <footer id="footer-text">
+            <p>© 2026 Астрологический портал · Все прогнозы сгенерированы на основе звёздных данных</p>
+        </footer>
+    </div>
+
+    <script>
+        (function() {
+            // --- ЛОКАЛИЗАЦИЯ ---
+            const locales = {
+                ru: {
+                    meta: {
+                        title: 'Ежедневный гороскоп на сегодня – астрологический прогноз для всех знаков зодиака',
+                        description: 'Узнайте свой ежедневный гороскоп на сегодня. Астрологический прогноз для каждого знака зодиака: любовь, работа, здоровье. Бесплатно.',
+                        keywords: 'гороскоп, прогноз, астрология, прогноз на день, знаки зодиака, ежедневный гороскоп, гороскоп на сегодня',
+                        ogTitle: 'Ежедневный гороскоп на сегодня – прогноз для всех знаков',
+                        ogDescription: 'Узнайте свой астрологический прогноз на сегодня для вашего знака зодиака.'
+                    },
+                    header: {
+                        title: '✨ Гороскоп дня',
+                        subtitle: 'Астрологический прогноз на сегодня для каждого знака зодиака'
+                    },
+                    signsTitle: 'Выберите свой знак',
+                    signs: [
+                        'Овен', 'Телец', 'Близнецы', 'Рак', 'Лев', 'Дева',
+                        'Весы', 'Скорпион', 'Стрелец', 'Козерог', 'Водолей', 'Рыбы'
+                    ],
+                    forecast: {
+                        advicePrefix: 'Совет дня:'
+                    },
+                    footer: '© 2026 Астрологический портал · Все прогнозы сгенерированы на основе звёздных данных',
+                    // Пулы прогнозов и советов (русские)
+                    forecastPool: [
+                        'Сегодня отличный день для новых начинаний. Доверьтесь своей интуиции.',
+                        'Ожидайте приятные сюрпризы в личной жизни. Звёзды благосклонны к романтике.',
+                        'Будьте осторожны в финансовых вопросах – не спешите с крупными тратами.',
+                        'Ваша энергия будет на высоте, займитесь спортом или активным отдыхом.',
+                        'Вам стоит больше времени уделять близким – они нуждаются в вашей заботе.',
+                        'Сегодня возможны неожиданные встречи, которые изменят ваши планы.',
+                        'День подходит для творчества и самовыражения – попробуйте что-то новое.',
+                        'Не принимайте поспешных решений – обдумайте каждое действие.',
+                        'Удача будет на вашей стороне, особенно в делах, связанных с коммуникацией.',
+                        'Обратите внимание на своё здоровье – небольшой отдых пойдёт на пользу.',
+                        'Вам предстоит важный разговор – подготовьтесь к нему заранее.',
+                        'Сегодня хороший день для путешествий или планирования поездки.',
+                        'Проявите инициативу в работе – ваши идеи оценят по достоинству.',
+                        'Будьте терпеливы с окружающими – это поможет избежать конфликтов.',
+                        'Вас ждёт романтический вечер, если вы позволите себе расслабиться.',
+                        'Сегодня стоит заняться самообразованием – новые знания пригодятся.',
+                        'День благоприятен для завершения старых дел и подведения итогов.',
+                        'Не забывайте отдыхать и находить время для себя.',
+                        'Возможны мелкие неприятности, но они не повлияют на общий настрой.',
+                        'Звёзды советуют довериться интуиции – она не подведёт вас.'
+                    ],
+                    advicePool: [
+                        'Пейте больше воды и избегайте кофеина после обеда.',
+                        'Сделайте зарядку или короткую прогулку на свежем воздухе.',
+                        'Позвоните старым друзьям – они будут рады вас слышать.',
+                        'Уделите время своему хобби – это принесёт удовольствие.',
+                        'Спланируйте завтрашний день, чтобы всё успевать.',
+                        'Медитируйте 10 минут перед сном для спокойствия.',
+                        'Съешьте что-то полезное, например, фрукты или орехи.',
+                        'Выключите телефон на час и насладитесь тишиной.',
+                        'Напишите список дел и выделите приоритеты.',
+                        'Улыбнитесь незнакомцу – это поднимет настроение вам обоим.'
+                    ]
+                },
+                en: {
+                    meta: {
+                        title: 'Daily Horoscope Today – Astrological Forecast for All Zodiac Signs',
+                        description: 'Get your daily horoscope today. Astrological forecast for each zodiac sign: love, work, health. Free.',
+                        keywords: 'horoscope, forecast, astrology, daily horoscope, zodiac signs, today\'s horoscope, astrological prediction',
+                        ogTitle: 'Daily Horoscope Today – Forecast for All Signs',
+                        ogDescription: 'Get your astrological forecast for today for your zodiac sign.'
+                    },
+                    header: {
+                        title: '✨ Daily Horoscope',
+                        subtitle: 'Astrological forecast for today for every zodiac sign'
+                    },
+                    signsTitle: 'Choose your sign',
+                    signs: [
+                        'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+                        'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
+                    ],
+                    forecast: {
+                        advicePrefix: 'Advice of the day:'
+                    },
+                    footer: '© 2026 Astrology Portal · All forecasts are generated based on stellar data',
+                    forecastPool: [
+                        'Today is a great day for new beginnings. Trust your intuition.',
+                        'Expect pleasant surprises in your personal life. The stars favor romance.',
+                        'Be cautious with finances – don\'t rush into large expenses.',
+                        'Your energy will be high – engage in sports or active leisure.',
+                        'Spend more time with loved ones – they need your care.',
+                        'Unexpected meetings today may change your plans.',
+                        'A good day for creativity and self-expression – try something new.',
+                        'Don\'t make hasty decisions – think through every action.',
+                        'Luck will be on your side, especially in communication-related matters.',
+                        'Pay attention to your health – a little rest will do you good.',
+                        'An important conversation awaits – prepare in advance.',
+                        'A good day for travel or planning a trip.',
+                        'Take initiative at work – your ideas will be appreciated.',
+                        'Be patient with others – it will help avoid conflicts.',
+                        'A romantic evening awaits if you allow yourself to relax.',
+                        'Today is good for self-education – new knowledge will come in handy.',
+                        'A favorable day for completing old tasks and summing up.',
+                        'Don\'t forget to rest and find time for yourself.',
+                        'Minor troubles may occur, but they won\'t affect your overall mood.',
+                        'The stars advise trusting your intuition – it won\'t let you down.'
+                    ],
+                    advicePool: [
+                        'Drink more water and avoid caffeine after lunch.',
+                        'Do some exercise or take a short walk in the fresh air.',
+                        'Call old friends – they will be happy to hear from you.',
+                        'Spend time on your hobby – it will bring joy.',
+                        'Plan tomorrow\'s schedule to keep up with everything.',
+                        'Meditate for 10 minutes before sleep for peace of mind.',
+                        'Eat something healthy, like fruits or nuts.',
+                        'Turn off your phone for an hour and enjoy the silence.',
+                        'Make a to-do list and prioritize.',
+                        'Smile at a stranger – it will lift both your moods.'
+                    ]
+                }
+            };
+
+            // --- Данные знаков (символы общие) ---
+            const signSymbols = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
+
+            // --- Текущий язык ---
+            let currentLang = 'ru';
+
+            // --- DOM элементы ---
+            const htmlElement = document.getElementById('html-lang');
+            const metaTitle = document.getElementById('meta-title');
+            const metaDesc = document.getElementById('meta-description');
+            const metaKeywords = document.getElementById('meta-keywords');
+            const ogTitle = document.getElementById('og-title');
+            const ogDesc = document.getElementById('og-description');
+            const headerTitle = document.getElementById('header-title');
+            const headerSubtitle = document.getElementById('header-subtitle');
+            const signsTitle = document.getElementById('signs-title');
+            const grid = document.getElementById('signsGrid');
+            const forecastSection = document.getElementById('forecastSection');
+            const symbolEl = document.getElementById('forecastSymbol');
+            const nameEl = document.getElementById('forecastName');
+            const dateEl = document.getElementById('forecastDate');
+            const textEl = document.getElementById('forecastText');
+            const adviceEl = document.getElementById('forecastAdvice');
+            const footerText = document.getElementById('footer-text');
+            const langBtns = document.querySelectorAll('.lang-btn');
+
+            let activeIndex = 0; // по умолчанию первый знак
+
+            // --- Вспомогательные функции ---
+            function getDayOfYear() {
+                const now = new Date();
+                const start = new Date(now.getFullYear(), 0, 0);
+                const diff = now - start;
+                return Math.floor(diff / (1000 * 60 * 60 * 24));
+            }
+
+            function formatDate(lang) {
+                const d = new Date();
+                if (lang === 'en') {
+                    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                } else {
+                    const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+                        'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+                    ];
+                    return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+                }
+            }
+
+            // --- Получение прогноза ---
+            function getTodaysForecast(signIndex, lang) {
+                const day = getDayOfYear();
+                const locale = locales[lang];
+                const forecastPool = locale.forecastPool;
+                const advicePool = locale.advicePool;
+                const forecastIdx = (day + signIndex) % forecastPool.length;
+                const adviceIdx = (day + signIndex + 7) % advicePool.length;
+                return {
+                    text: forecastPool[forecastIdx],
+                    advice: advicePool[adviceIdx]
+                };
+            }
+
+            // --- Обновление всего интерфейса ---
+            function updateUI(lang, signIndex) {
+                const locale = locales[lang];
+                // Мета-теги
+                metaTitle.textContent = locale.meta.title;
+                metaDesc.content = locale.meta.description;
+                metaKeywords.content = locale.meta.keywords;
+                ogTitle.content = locale.meta.ogTitle;
+                ogDesc.content = locale.meta.ogDescription;
+                // html lang
+                htmlElement.lang = lang;
+
+                // Шапка
+                headerTitle.textContent = locale.header.title;
+                headerSubtitle.textContent = locale.header.subtitle;
+                signsTitle.textContent = locale.signsTitle;
+                footerText.innerHTML = `<p>${locale.footer}</p>`;
+
+                // Знаки
+                const signNames = locale.signs;
+                // Перерисовываем карточки знаков
+                renderSigns(signNames, signIndex);
+
+                // Прогноз
+                updateForecast(signIndex, lang);
+
+                // Активные кнопки языка
+                langBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === lang);
+                });
+            }
+
+            // --- Отрисовка знаков ---
+            function renderSigns(signNames, activeIdx) {
+                grid.innerHTML = '';
+                signNames.forEach((name, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'sign-card' + (idx === activeIdx ? ' active' : '');
+                    card.dataset.index = idx;
+                    card.innerHTML = `
+                        <div class="sign-symbol">${signSymbols[idx]}</div>
+                        <div class="sign-name">${name}</div>
+                    `;
+                    card.addEventListener('click', () => {
+                        setActiveSign(idx);
+                    });
+                    grid.appendChild(card);
+                });
+            }
+
+            // --- Обновление прогноза ---
+            function updateForecast(index, lang) {
+                const locale = locales[lang];
+                const signNames = locale.signs;
+                const forecast = getTodaysForecast(index, lang);
+                symbolEl.textContent = signSymbols[index];
+                nameEl.textContent = signNames[index];
+                dateEl.textContent = formatDate(lang);
+                textEl.textContent = forecast.text;
+                adviceEl.textContent = locale.forecast.advicePrefix + ' ' + forecast.advice;
+
+                // Анимация
+                forecastSection.style.opacity = '0';
+                forecastSection.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    forecastSection.style.opacity = '1';
+                    forecastSection.style.transform = 'translateY(0)';
+                }, 50);
+            }
+
+            // --- Установка активного знака ---
+            function setActiveSign(index) {
+                activeIndex = index;
+                const signNames = locales[currentLang].signs;
+                // Обновляем классы
+                document.querySelectorAll('.sign-card').forEach((card, i) => {
+                    card.classList.toggle('active', i === index);
+                });
+                updateForecast(index, currentLang);
+            }
+
+            // --- Переключение языка ---
+            function setLanguage(lang) {
+                if (lang === currentLang) return;
+                currentLang = lang;
+                // Сохраняем выбор в localStorage
+                try {
+                    localStorage.setItem('horoscope-lang', lang);
+                } catch (e) {}
+                updateUI(lang, activeIndex);
+            }
+
+            // --- Определение языка браузера ---
+            function detectBrowserLanguage() {
+                const langs = navigator.languages || [navigator.language];
+                for (let l of langs) {
+                    if (l.startsWith('en')) return 'en';
+                    if (l.startsWith('ru')) return 'ru';
+                }
+                return 'ru'; // по умолчанию русский
+            }
+
+            // --- Инициализация ---
+            function init() {
+                // Восстанавливаем сохранённый язык или определяем
+                let savedLang = null;
+                try {
+                    savedLang = localStorage.getItem('horoscope-lang');
+                } catch (e) {}
+                let lang = savedLang || detectBrowserLanguage();
+                // Проверка, что язык поддерживается
+                if (!['ru', 'en'].includes(lang)) lang = 'ru';
+                currentLang = lang;
+
+                // Обновляем интерфейс
+                updateUI(lang, 0); // по умолчанию первый знак (0)
+                // Сохраняем активный индекс
+                activeIndex = 0;
+
+                // Обработчики кнопок переключения языка
+                langBtns.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const lang = btn.dataset.lang;
+                        setLanguage(lang);
+                    });
+                });
+            }
+
+            // --- Звёздное небо (canvas) ---
+            const canvas = document.getElementById('starfield');
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+            const numStars = 180;
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            function initStars() {
+                stars = [];
+                for (let i = 0; i < numStars; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 1.8 + 0.5,
+                        alpha: Math.random() * 0.6 + 0.4,
+                        speed: Math.random() * 0.008 + 0.003
+                    });
+                }
+            }
+            initStars();
+
+            function drawStars() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(star => {
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 240, 210, ${star.alpha})`;
+                    ctx.fill();
+                    star.alpha += (Math.random() - 0.5) * 0.02;
+                    star.alpha = Math.min(0.9, Math.max(0.2, star.alpha));
+                });
+                requestAnimationFrame(drawStars);
+            }
+            drawStars();
+
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                initStars();
+            });
+
+            // Запускаем приложение
+            init();
+
+        })();
+    </script>
+
+</body>
+</html>
